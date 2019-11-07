@@ -1,6 +1,7 @@
 package pl.marcineksoft.spring.demo;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,12 +14,14 @@ import pl.marcineksoft.spring.demo.repositories.UserRepository;
 @RequestMapping("/register")
 public class RegistrationController {
 
-
+    private final PasswordEncoder encodedPassword;  // gdy nie było final wywalalo blad 500
+    // po dodatkowym dopisaniu do konstruktora pod szyldem @Autowired Spring sprawa że nie ma nullpointer exception
     private final UserRepository userRepository;
 
     @Autowired
-    public RegistrationController(UserRepository userRepository) {
+    public RegistrationController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.encodedPassword=passwordEncoder;
     }
 
 
@@ -38,12 +41,22 @@ public class RegistrationController {
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setUsername(username);
-        user.setPassword(password);
+
+
+        String haselko = encodedPassword.encode(password);// tutaj wywalilo nullpointer'a
+        //nullpointerem bylo to co jest przed kropka wiec chodzi o encodedPassword
+        // okazalo sie ze mamy braki w konstruktorze
+        user.setPassword(haselko);
         user.setActive(true);
 
+       userRepository.save(user);
+        System.out.println("Zapisany użytkownik: " + user);
 
-        return "";
+
+        return "redirect:/index.html";
     }
+
+
 
 
 }

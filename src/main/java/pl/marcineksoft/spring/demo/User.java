@@ -3,6 +3,7 @@ package pl.marcineksoft.spring.demo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -13,9 +14,12 @@ import java.util.Objects;
 @AllArgsConstructor
 @Builder
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+
 
     @Column(unique = true, nullable = false)
     private String username;
