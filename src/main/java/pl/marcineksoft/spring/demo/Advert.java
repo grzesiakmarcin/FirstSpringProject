@@ -20,12 +20,12 @@ public class Advert {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-
-    private LocalDateTime posted;
-
     @ManyToOne
     @JoinColumn(name = "owner_id")
     private User owner;
+
+    private LocalDateTime posted;
+
 
     @Column(name = "owner_id", insertable = false, updatable = false)
     private Long ownerId;

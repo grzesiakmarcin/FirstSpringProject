@@ -14,6 +14,7 @@ import javax.sql.DataSource;
 
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
     private final DataSource dataSource;
 
     @Autowired
@@ -35,19 +36,20 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authoritiesByUsernameQuery("SELECT username, 'ROLE_USER' FROM users WHERE username = ?");
     }
 
+    @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers("/register").permitAll()
+        http
+                .authorizeRequests()
+                .antMatchers("/").permitAll()   // Dodajemy stronę główną, aby mógł wejść na nią każdy
+                .antMatchers("/register").anonymous()
                 .antMatchers("/login").anonymous()
                 .anyRequest().authenticated()
                 .and()
-            .formLogin()
+                .formLogin()
                 .loginPage("/login")
-                .defaultSuccessUrl("/index.html")
+                .defaultSuccessUrl("/") // Usuwamy plik `index.html` i dajemy ścieżkę do kontrolera strony głównej
                 .and()
                 .logout()
-                .logoutSuccessUrl("/index.html");
+                .logoutSuccessUrl("/");  // j.w.
     }
-
-
 }

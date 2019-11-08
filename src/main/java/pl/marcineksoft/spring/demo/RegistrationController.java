@@ -53,7 +53,7 @@ public class RegistrationController {
         System.out.println("Zapisany użytkownik: " + user);
 
 
-        return "redirect:/index.html";
+        return "redirect:/home-page.html";
     }
 
 
